@@ -1,7 +1,9 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import * as firebase from 'firebase'
+import AsyncStorage from '@react-native-community/async-storage';
+
 import { RootStackParamList } from '../types';
 
 export default function NotFoundScreen({
@@ -15,7 +17,9 @@ export default function NotFoundScreen({
 
   const handleLogIn = () => {
     firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(result => {
+    .then(async(result) => {
+      await AsyncStorage.setItem('isLoggedIn', 'true');
+      await AsyncStorage.setItem('role', role);
       navigation.navigate('Root', {
         screen: 'Home',
         params: {
@@ -30,7 +34,11 @@ export default function NotFoundScreen({
   }
   const handleSignUp = ()=> {
     firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(result=> navigation.navigate('Onboarding', {params: {role}}))
+    .then(async (result)=> {
+      await AsyncStorage.setItem('isLoggedIn', 'true');
+      await AsyncStorage.setItem('role', role);
+      navigation.navigate('Onboarding', {params: {role}})
+    })
     .catch(err=> {
       if(err.code === 'auth/email-already-in-use') {
         handleLogIn()

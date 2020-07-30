@@ -5,15 +5,19 @@ import { Text, View } from "../components/Themed";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function ParentOrNanny({ navigation }) {
+
+  const handleChoice = (choice)=> {
+    navigation.navigate("SignUp", {
+      params: {
+        role: choice,
+      },
+    })
+  }
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("SignUp", {
-            params: {
-              role: "parent",
-            },
-          })
+          handleChoice('parent')
         }
       >
         <View>
@@ -21,10 +25,7 @@ export default function ParentOrNanny({ navigation }) {
         </View>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("SignUp", {
-              role: "nanny",
-          })
+        onPress={() => handleChoice('babysitter')
         }
       >
         <View>
