@@ -4,6 +4,10 @@ import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
+import ParentOrNanny from '../screens/ParentOrNanny';
+import SignUp from '../screens/SignUp';
+import Onboarding from '../screens/Onboarding';
+
 import { RootStackParamList } from '../types';
 import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -27,6 +31,11 @@ const Stack = createStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ParentOrNanny" component={ParentOrNanny} options={{ title: 'parent or nanny!' }} />
+      <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'sign up' }} />
+      <Stack.Screen name="Onboarding" component={Onboarding} options={{ title: 'Onboarding' }} />
+
+
       <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>
