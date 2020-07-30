@@ -23,17 +23,31 @@ export default function NotFoundScreen({
       .then(async result => {
         await AsyncStorage.setItem("isLoggedIn", "true");
         await AsyncStorage.setItem("role", role);
-        navigation.navigate("Root", {
-          screen: "Home",
-          params: {
-            role,
-          },
-        });
+        // search for user to get their id
+        db.collection(`${role}s`)
+          .where("email", "==", email)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(async doc => {
+              // doc.data() is never undefined for query doc snapshots
+              await AsyncStorage.setItem("userId", doc.id);
+            });
+            navigation.navigate("Root", {
+              screen: "Home",
+              params: {
+                role,
+              },
+            });
+          })
+          .catch(function (error) {
+            setError(error.message);
+          });
       })
       .catch(function (error) {
         setError(error.message);
       });
   };
+
   const handleSignUp = () => {
     firebase
       .auth()
@@ -43,19 +57,16 @@ export default function NotFoundScreen({
         await AsyncStorage.setItem("role", role);
         const collection = role + "s";
         console.log(collection);
-        // save to firestore
+        // save user to firestore
         db.collection(collection)
           .add({
             email,
           })
-          .then(function (docRef) {
-            console.log(docRef, "docRef");
-
+          .then(async docRef => {
+            await AsyncStorage.setItem("userId", docRef.id);
             navigation.navigate("Onboarding", { params: { role } });
           })
           .catch(function (error) {
-            console.log(error, "eeeeeeee");
-
             setError(error.message);
           });
       })
