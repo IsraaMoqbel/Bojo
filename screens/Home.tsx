@@ -35,13 +35,14 @@ export default function TabOneScreen() {
           {isLoading ? (
             <Text>Loading...</Text>
           ) : babysittersArray.length > 0 ? (
-            babysittersArray.map(e => {
-              return <NannyCard data={e} key={e.email} />;
+            babysittersArray.map((e, i) => {
+              return <NannyCard data={e} key={`${e.email}_${i}`} />;
             })
           ) : (
             <Text>Oh, no! No babysitters yet!</Text>
           )}
         </View>
+        <View style={styles.bottomSpace} />
       </ScrollView>
     </View>
   );
@@ -73,4 +74,7 @@ const styles = StyleSheet.create({
     height: 1,
     width: "80%",
   },
+  bottomSpace: {
+    marginBottom: 120,
+  }
 });

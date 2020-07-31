@@ -22,6 +22,7 @@ export default function NotFoundScreen({
       .signInWithEmailAndPassword(email, password)
       .then(async result => {
         await AsyncStorage.setItem("isLoggedIn", "true");
+        await AsyncStorage.setItem("email", email);
         await AsyncStorage.setItem("role", role);
         // search for user to get their id
         db.collection(`${role}s`)
@@ -54,6 +55,7 @@ export default function NotFoundScreen({
       .createUserWithEmailAndPassword(email, password)
       .then(async result => {
         await AsyncStorage.setItem("isLoggedIn", "true");
+        await AsyncStorage.setItem("email", email);
         await AsyncStorage.setItem("role", role);
         const collection = role + "s";
         console.log(collection);
@@ -64,6 +66,7 @@ export default function NotFoundScreen({
           })
           .then(async docRef => {
             await AsyncStorage.setItem("userId", docRef.id);
+
             navigation.navigate("Onboarding", { params: { role } });
           })
           .catch(function (error) {

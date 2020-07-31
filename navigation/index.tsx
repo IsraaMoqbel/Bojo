@@ -13,6 +13,7 @@ import ParentOrNanny from "../screens/ParentOrNanny";
 import SignUp from "../screens/SignUp";
 import Onboarding from "../screens/Onboarding";
 import Splash from "../screens/Splash";
+import Profile from "../screens/Profile";
 
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -44,7 +45,6 @@ function RootNavigator() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let userStatus;
       // TODO remove this reset
@@ -61,12 +61,14 @@ function RootNavigator() {
     bootstrapAsync();
   });
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator 
+    screenOptions={{ headerShown: false }}
+    >
       {isLoading ? (
         <Stack.Screen
           name="Splash"
           component={Splash}
-          options={{ title: "BOJO" }}
+          options={{ title: "BOJO", header: () => null  }}
         />
       ) : isLoggedIn === "true" ? (
         <Stack.Screen name="Root" component={BottomTabNavigator} />
@@ -75,22 +77,27 @@ function RootNavigator() {
           <Stack.Screen
             name="ParentOrNanny"
             component={ParentOrNanny}
-            options={{ title: "parent or nanny!" }}
+            options={{ title: "parent or nanny!", header: () => null  }}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{ title: "profile", header: () => null  }}
           />
           <Stack.Screen
             name="SignUp"
             component={SignUp}
-            options={{ title: "sign up" }}
+            options={{ title: "sign up", header: () => null }}
           />
           <Stack.Screen
             name="Onboarding"
             component={Onboarding}
-            options={{ title: "Onboarding" }}
+            options={{ title: "Onboarding", header: () => null  }}
           />
           <Stack.Screen
             name="NotFound"
             component={NotFoundScreen}
-            options={{ title: "Oops!" }}
+            options={{ title: "Oops!", header: () => null  }}
           />
           <Stack.Screen name="Root" component={BottomTabNavigator} />
         </>

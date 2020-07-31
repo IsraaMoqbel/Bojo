@@ -23,7 +23,7 @@ export default function NannyCard(props) {
       {!name && <Text style={styles.bold}>{email.split("@")[0]}</Text>}
       {name && <Text style={styles.bold}>{name}</Text>}
       <View style={styles.row}>
-        {address && (
+        {!!address && (
           <>
             <Ionicons
               size={30}
@@ -39,12 +39,12 @@ export default function NannyCard(props) {
           </>
         )}
       </View>
-      {age && <Text>age: {age}</Text>}
-      {certificates && <Text>certificates: {certificates.length}</Text>}
-      {experience && <Text>{experience} years experience</Text>}
+      {!!age && <Text>age: {age}</Text>}
+      {!!certificates && <Text>certificates: {certificates.length}</Text>}
+      {!!experience && <Text>{experience} years experience</Text>}
 
-      {pricePerHour && <Text style={styles.price}>${pricePerHour}/hr</Text>}
-      {rating && <Text>{rating}</Text>}
+      {!!pricePerHour && <Text style={styles.price}>${pricePerHour}/hr</Text>}
+      {!!rating && <Text>{rating}</Text>}
       <View style={styles.button}>
         <Button title="invite" onPress={() => null} />
       </View>
