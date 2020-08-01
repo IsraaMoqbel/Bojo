@@ -7,17 +7,25 @@ import { Ionicons } from "@expo/vector-icons";
 export default function NannyCard(props) {
   const {
     email,
+    ID,
     name,
     age,
     pricePerHour,
     address,
-    availabilityEnd,
-    availabilityStart,
+    endTime,
+    startTime,
     certificates,
     location,
     rating,
+    userId,
     experience,
+    childrenNumber,
+    street,
+    building,
+    cardNumber,
   } = props.data;
+  const { writeInvitieData } = props;
+
   return (
     <View style={styles.card}>
       {!name && <Text style={styles.bold}>{email.split("@")[0]}</Text>}
@@ -46,7 +54,22 @@ export default function NannyCard(props) {
       {!!pricePerHour && <Text style={styles.price}>${pricePerHour}/hr</Text>}
       {!!rating && <Text>{rating}</Text>}
       <View style={styles.button}>
-        <Button title="invite" onPress={() => null} />
+        <Button
+          title="invite"
+          onPress={() =>
+            writeInvitieData(
+              userId,
+              startTime,
+              endTime,
+              name,
+              pricePerHour,
+              childrenNumber,
+              street,
+              building,
+              cardNumber
+            )
+          }
+        />
       </View>
     </View>
   );

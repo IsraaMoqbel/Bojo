@@ -43,7 +43,6 @@ export default function Profile({ navigation }) {
   const [pricePerHour, setPricePerHour] = React.useState("");
   const [email, setEmail] = React.useState("");
 
-
   const db = firebase.firestore();
   React.useEffect(() => {
     setIsLoading(true);
@@ -134,6 +133,7 @@ export default function Profile({ navigation }) {
       childrenName,
       childrenAge,
       street,
+      city,
       ID,
       paymentData: [cardNumber, cardName, cardDate, CVV],
       userId,
