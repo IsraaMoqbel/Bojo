@@ -9,6 +9,8 @@ import Home from "../screens/Home";
 import Profile from "../screens/Profile";
 import Chat from "../screens/Chat";
 import Favorites from "../screens/Favorites";
+import Bookings from "../screens/Bookings";
+
 import { BottomTabParamList, HomeParamList, ProfileParamList } from "../types";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
@@ -36,6 +38,15 @@ export default function BottomTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-chatbubbles" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Bookings"
+        component={Bookings}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-list" color={color} />
           ),
         }}
       />

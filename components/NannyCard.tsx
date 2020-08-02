@@ -53,24 +53,26 @@ export default function NannyCard(props) {
 
       {!!pricePerHour && <Text style={styles.price}>${pricePerHour}/hr</Text>}
       {!!rating && <Text>{rating}</Text>}
-      <View style={styles.button}>
-        <Button
-          title="invite"
-          onPress={() =>
-            writeInvitieData(
-              userId,
-              startTime,
-              endTime,
-              name,
-              pricePerHour,
-              childrenNumber,
-              street,
-              building,
-              cardNumber
-            )
-          }
-        />
-      </View>
+      {props.role === "parent" && (
+        <View style={styles.button}>
+          <Button
+            title="invite"
+            onPress={() =>
+              writeInvitieData(
+                userId,
+                startTime,
+                endTime,
+                name,
+                pricePerHour,
+                childrenNumber,
+                street,
+                building,
+                cardNumber
+              )
+            }
+          />
+        </View>
+      )}
     </View>
   );
 }

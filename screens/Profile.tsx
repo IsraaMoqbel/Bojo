@@ -89,8 +89,25 @@ export default function Profile({ navigation }) {
                     ? userData.isSpecialNeedsKid
                     : false
                 );
-                setCardDate(userData.cardDate ? userData.cardDate : "");
-                setCardName(userData.cardName ? userData.cardName : "");
+                setCardDate(
+                  userData.paymentData.cardDate
+                    ? userData.paymentData.cardDate
+                    : ""
+                );
+                setCardNumber(
+                  userData.paymentData.cardNumber
+                    ? userData.paymentData.cardNumber
+                    : ""
+                );
+                setCVV(
+                  userData.paymentData.CVV ? userData.paymentData.CVV : ""
+                );
+
+                setCardName(
+                  userData.paymentData.cardName
+                    ? userData.paymentData.cardName
+                    : ""
+                );
                 setPaymentMethod(
                   userData.paymentMethod ? userData.paymentMethod : ""
                 );
@@ -135,7 +152,7 @@ export default function Profile({ navigation }) {
       street,
       city,
       ID,
-      paymentData: [cardNumber, cardName, cardDate, CVV],
+      paymentData: { cardNumber, cardName, cardDate, CVV },
       userId,
       role,
       childrenNumber,
@@ -214,7 +231,7 @@ export default function Profile({ navigation }) {
     navigation.navigate("ParentOrNanny");
   };
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text style={styles.title}>Profile</Text>
       <ScrollView>
         <Text style={styles.subTitle}>Personal Info</Text>

@@ -1,18 +1,10 @@
 import * as React from "react";
-import {
-  StyleSheet,
-  Button,
-  ScrollView,
-  Modal,
-  TouchableHighlight,
-  Alert,
-} from "react-native";
+import { StyleSheet, ScrollView, Alert } from "react-native";
 
 import NannyCard from "../components/NannyCard";
 import { Text, View } from "../components/Themed";
 import firebase from "firebase";
 import AsyncStorage from "@react-native-community/async-storage";
-// Get a reference to the database service
 
 export default function TabOneScreen() {
   const realTimeDB = firebase.database();
@@ -24,7 +16,6 @@ export default function TabOneScreen() {
   const babysittersDocRef = db.collection("babysitters");
   const [userId, setUserId] = React.useState("");
   const [role, setRole] = React.useState("");
-  const [modalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     babysittersDocRef
@@ -44,39 +35,21 @@ export default function TabOneScreen() {
   }, []);
 
   React.useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
-    const bootstrapAsync = async () => {
-      let userIdInStorage;
-      let roleInStorage;
-      try {
-        userIdInStorage = await AsyncStorage.getItem("userId");
-        roleInStorage = await AsyncStorage.getItem("role");
-        setUserId(userIdInStorage);
-        setRole(roleInStorage);
-        // get nanny's invitation
-        // var userId = firebase.auth().currentUser.uid;
-        console.log(userId, "uuuu");
-        if (role === "babysitter") {
-          return firebase
-            .database()
-            .ref("/invitations/" + userId)
-            .once("value")
-            .then(function (snapshot) {
-              // var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-              console.log(snapshot.val());
-
-              // ...
-            });
-        }
-
-        // const docRef = await db.collection(`${roleInStorage}s`).doc(userId);
-      } catch (e) {
-        setIsLoading(false);
-        // Restoring token failed
-      }
-    };
     bootstrapAsync();
   }, [role]);
+  // Fetch the token from storage then navigate to our appropriate place
+  const bootstrapAsync = async () => {
+    let userIdInStorage;
+    let roleInStorage;
+    try {
+      userIdInStorage = await AsyncStorage.getItem("userId");
+      roleInStorage = await AsyncStorage.getItem("role");
+      setUserId(userIdInStorage);
+      setRole(roleInStorage);
+    } catch (e) {
+      Alert.alert("oops!");
+    }
+  };
 
   const writeInvitieData = async (
     nannyId,
@@ -97,10 +70,9 @@ export default function TabOneScreen() {
             street,
             building,
             city,
-            cardNumber,
             paymentData,
           } = userData;
-          console.log(childrenNumber, street, cardNumber);
+          console.log(childrenNumber, street);
 
           if (
             childrenNumber &&
@@ -151,7 +123,7 @@ export default function TabOneScreen() {
   };
 
   return (
-    <View>
+    <View style={styles.outerContainer}>
       <Text style={styles.title}>Home</Text>
       <ScrollView>
         <Text style={styles.subTitle}>Babysitters available now</Text>
@@ -165,6 +137,7 @@ export default function TabOneScreen() {
                   data={e}
                   key={`${e.email}_${i}`}
                   writeInvitieData={writeInvitieData}
+                  role={role}
                 />
               );
             })
@@ -174,33 +147,6 @@ export default function TabOneScreen() {
         </View>
         <View style={styles.bottomSpace} />
       </ScrollView>
-
-      {/* modal section  */}
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
-
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-      </View>
     </View>
   );
 }
@@ -210,6 +156,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  outerContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 20,
