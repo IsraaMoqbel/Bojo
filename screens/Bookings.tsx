@@ -6,10 +6,8 @@ import { Text, View } from "../components/Themed";
 import firebase from "firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 
-export default function BookingsScreen() {
-  const realTimeDB = firebase.database();
+export default function BookingsScreen({navigation}) {
   const db = firebase.firestore();
-  const [babysittersArray, setBabysittersArray] = React.useState([]);
   const [invitationsArray, setInvitationsArray] = React.useState([]);
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -19,6 +17,14 @@ export default function BookingsScreen() {
   React.useEffect(() => {
     bootstrapAsync();
   }, [role]);
+
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', e => {
+  //   bootstrapAsync();
+
+  //   });
+  // }, [navigation]);
+
   const bootstrapAsync = async () => {
     setIsLoading(true);
     let userIdInStorage;
@@ -28,62 +34,41 @@ export default function BookingsScreen() {
       roleInStorage = await AsyncStorage.getItem("role");
       setUserId(userIdInStorage);
       setRole(roleInStorage);
-      console.log(1);
 
-      if (role === "babysitter") {
-        const invitations = invitationsArray;
         await firebase
-          .database()
-          .ref("/invitations/" + userId)
-          .once("value")
-          .then(async snapshot => {
-            invitations.push(snapshot.val());
-            await setInvitationsArray(invitations);
-            setIsLoading(false);
-          });
-      } else {
-        console.log(2);
-        return firebase
-          .database()
-          .ref("/invitations")
-          .once("value")
-          .then(function (snapshot) {
-            console.log(3);
-            return snapshot.val();
-            // ...
-          })
-          .then(result => {
+        .database()
+        .ref("/invitations")
+        .once("value")
+        .then(async snapshot => {
+          setInvitationsArray(() => {
             const invitations = invitationsArray;
-            setInvitationsArray(() => {
-              for (let e in result) {
-                if (result[e].parentId === userId) {
-                  invitations.push(result);
-
-                  console.log(invitationsArray, "iiiiiiiii");
+              for (let e in snapshot.val()) {
+                if (role === 'parent' && snapshot.val()[e].parentId === userId || role==='babysitter' && snapshot.val()[e].nannyId === userId) {
+                  invitations.push(snapshot.val()[e]);
                 }
               }
               return invitations;
             });
+            
             setIsLoading(false);
           });
-      }
     } catch (e) {
       setIsLoading(false);
     }
-  };
+  }
 
-  const acceptInvitation = () => {
+  const acceptInvitation = async (invitationData) => {
     firebase
       .database()
-      .ref("invitations/" + userId)
+      .ref("invitations/" + invitationData.uniqueId)
       .update(
         {
+          ...invitationData,
           status: "confirmed",
         },
         function (error) {
           if (error) {
             console.log(error, "errorrrrrr");
-
             // The write failed...
           } else {
             Alert.alert("Invitation accepted successfully!");
@@ -91,21 +76,25 @@ export default function BookingsScreen() {
           }
         }
       );
-    bootstrapAsync();
-  };
+ await firebase.database().ref('/invitations/' + invitationData.uniqueId).on('value', function(snapshot) {
+  console.log(snapshot.val(),'ssssssssssssssssssssssss')
+  setInvitationsArray(()=> [...invitationsArray.filter(e => e.uniqueId !== snapshot.val().uniqueId), snapshot.val()])
+  // ...
+});
+}
 
-  const markInvitationDone = () => {
+  const markInvitationDone = async (invitationData) => {
     firebase
       .database()
-      .ref("invitations/" + userId)
+      .ref("invitations/" + invitationData.uniqueId)
       .update(
         {
+          ...invitationData,
           status: "done",
         },
         function (error) {
           if (error) {
             console.log(error, "errorrrrrr");
-
             // The write failed...
           } else {
             Alert.alert("Invitation ended successfully!");
@@ -113,9 +102,13 @@ export default function BookingsScreen() {
           }
         }
       );
-    bootstrapAsync();
+      await firebase.database().ref('/invitations/' + invitationData.uniqueId).on('value', function(snapshot) {
+        console.log(snapshot.val(),'ssssssssssssssssssssssss')
+        setInvitationsArray(()=> [...invitationsArray.filter(e => e.uniqueId !== snapshot.val().uniqueId), snapshot.val()])
+        // ...
+      });
   };
-  console.log(invitationsArray, "iiiiiiiiiiiiiixxxxxxxxxxx");
+
   return (
     <View style={styles.outerContainer}>
       <Text style={styles.title}>Bookings</Text>
@@ -126,13 +119,12 @@ export default function BookingsScreen() {
           {isLoading ? (
             <Text>Loading...</Text>
           ) : (
-            invitationsArray &&
+            invitationsArray && 
             invitationsArray.map((e, i) => {
-              // console.log(e[Object.keys(e)],'ooooooooooooooooooo');
               return (
                 <InvitationCard
                   role={role}
-                  invitationData={e[Object.keys(e)]}
+                  invitationData={e}
                   key={`${i}_${e.street}`}
                   acceptInvitation={acceptInvitation}
                   markInvitationDone={markInvitationDone}

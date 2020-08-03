@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Text } from "./Themed";
-import { View, StyleSheet, Button } from "react-native";
+import { View, StyleSheet, Button, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function NannyCard(props) {
@@ -23,56 +23,68 @@ export default function NannyCard(props) {
     street,
     building,
     cardNumber,
+    city,
+    country,
   } = props.data;
   const { writeInvitieData } = props;
 
   return (
     <View style={styles.card}>
-      {!name && <Text style={styles.bold}>{email.split("@")[0]}</Text>}
-      {name && <Text style={styles.bold}>{name}</Text>}
-      <View style={styles.row}>
-        {!!address && (
-          <>
-            <Ionicons
-              size={30}
-              style={{
-                marginBottom: -3,
-                marginRight: 5,
-                color: "grey",
-                fontSize: 14,
-              }}
-              name="ios-globe"
+      <View>
+        <Image
+          source={require("../assets/images/avatar.jpg")}
+          style={{ width: 50, height: 50, marginRight: 20 }}
+        />
+      </View>
+      <View>
+        {!name && <Text style={styles.bold}>{email.split("@")[0]}</Text>}
+        {name && <Text style={styles.bold}>{name}</Text>}
+        <View style={styles.row}>
+          {!!city && !!country && (
+            <>
+              <Ionicons
+                size={30}
+                style={{
+                  marginBottom: -3,
+                  marginRight: 5,
+                  color: "grey",
+                  fontSize: 14,
+                }}
+                name="ios-globe"
+              />
+              <Text style={styles.price}>
+                {city}, {country}
+              </Text>
+            </>
+          )}
+        </View>
+        {!!age && <Text>age: {age}</Text>}
+        {!!certificates && <Text>certificates: {certificates.length}</Text>}
+        {!!experience && <Text>{experience} years experience</Text>}
+
+        {!!pricePerHour && <Text style={styles.price}>${pricePerHour}/hr</Text>}
+        {!!rating && <Text>{rating}</Text>}
+        {props.role === "parent" && (
+          <View style={styles.button}>
+            <Button
+              title="invite"
+              onPress={() =>
+                writeInvitieData(
+                  userId,
+                  startTime,
+                  endTime,
+                  name,
+                  pricePerHour,
+                  childrenNumber,
+                  street,
+                  building,
+                  cardNumber
+                )
+              }
             />
-            <Text style={styles.price}>{address}</Text>
-          </>
+          </View>
         )}
       </View>
-      {!!age && <Text>age: {age}</Text>}
-      {!!certificates && <Text>certificates: {certificates.length}</Text>}
-      {!!experience && <Text>{experience} years experience</Text>}
-
-      {!!pricePerHour && <Text style={styles.price}>${pricePerHour}/hr</Text>}
-      {!!rating && <Text>{rating}</Text>}
-      {props.role === "parent" && (
-        <View style={styles.button}>
-          <Button
-            title="invite"
-            onPress={() =>
-              writeInvitieData(
-                userId,
-                startTime,
-                endTime,
-                name,
-                pricePerHour,
-                childrenNumber,
-                street,
-                building,
-                cardNumber
-              )
-            }
-          />
-        </View>
-      )}
     </View>
   );
 }
@@ -81,7 +93,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     // alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
     borderColor: "grey",
     borderRadius: 10,
     width: "90%",
@@ -91,6 +103,7 @@ const styles = StyleSheet.create({
     color: "grey",
     backgroundColor: "yellow",
     padding: 10,
+    flexDirection: 'row'
   },
   title: {
     fontSize: 20,

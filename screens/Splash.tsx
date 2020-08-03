@@ -1,7 +1,7 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import logo from '../assets/images/icon.png'
 import { RootStackParamList } from '../types';
 
 export default function SplashScreen({
@@ -10,6 +10,7 @@ export default function SplashScreen({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>BOJO</Text>
+      <Image source={ require('../assets/images/icon.png')} />
       <Text style={styles.subTitle}>Babysitters app</Text>
     </View>
   );

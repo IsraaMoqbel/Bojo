@@ -5,6 +5,7 @@ import NannyCard from "../components/NannyCard";
 import { Text, View } from "../components/Themed";
 import firebase from "firebase";
 import AsyncStorage from "@react-native-community/async-storage";
+import uniqid from 'react-id-generator';
 
 export default function TabOneScreen() {
   const realTimeDB = firebase.database();
@@ -83,14 +84,16 @@ export default function TabOneScreen() {
             city &&
             building
           ) {
+            const uniqueId =  uniqid()
             firebase
               .database()
-              .ref("invitations/" + nannyId)
+              .ref("invitations/" + uniqueId)
               .set(
                 {
                   parentId: userId,
                   nannyId: nannyId,
                   startTime,
+                  uniqueId,
                   endTime,
                   name,
                   pricePerHour,
@@ -113,7 +116,7 @@ export default function TabOneScreen() {
             Alert.alert("", "please fill your information first!");
           }
         }
-      })
+      }).then(()=> Alert.alert("Invitation sent successfully!"))
       .catch(err => {
         Alert.alert("oops error sending invitation!");
         console.log(err, "errrrrrrrr");

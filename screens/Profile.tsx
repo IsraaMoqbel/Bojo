@@ -5,6 +5,7 @@ import {
   ScrollView,
   CheckBox,
   Button,
+  Alert,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -138,10 +139,10 @@ export default function Profile({ navigation }) {
     bootstrapAsync();
   }, [role]);
 
-  const updateParentData = () => {
+  const updateParentData = async () => {
     const docRef = db.collection(`${role}s`).doc(userId);
 
-    docRef.set({
+    await docRef.set({
       name,
       email,
       age,
@@ -157,12 +158,13 @@ export default function Profile({ navigation }) {
       role,
       childrenNumber,
     });
+    Alert.alert('data updated successfully!')
   };
 
-  const updateBabysitterData = () => {
+  const updateBabysitterData = async () => {
     const docRef = db.collection(`${role}s`).doc(userId);
 
-    docRef.set({
+    await docRef.set({
       name,
       email,
       age,
@@ -170,6 +172,7 @@ export default function Profile({ navigation }) {
       building,
       street,
       ID,
+      city,
       userId,
       role,
       startDate,
@@ -177,7 +180,8 @@ export default function Profile({ navigation }) {
       endDate,
       endTime,
       pricePerHour,
-    });
+    })
+    Alert.alert('data updated successfully!')
   };
 
   // control date pickers

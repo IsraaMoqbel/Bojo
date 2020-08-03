@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function NannyCard(props) {
   const invitationData = props.invitationData;
+  console.log(invitationData,'invitationData')
 
   return (
     <View
@@ -24,19 +25,19 @@ export default function NannyCard(props) {
           in {invitationData.building}
           {"\n"}
           at{" "}
-          {/* {new Date(invitationData.startTime.seconds * 1000).toLocaleString()} */}
+          {invitationData.startTime && new Date(invitationData.startTime.seconds * 1000).toLocaleString()}
         </Text>
       </View>
       <View style={styles.button}>
         {props.role === "babysitter" && invitationData.status === "pending" ? (
           <Button
             title="Accept invitation"
-            onPress={() => props.acceptInvitation()}
+            onPress={() => props.acceptInvitation(invitationData)}
           />
         ) : (
           invitationData.status === "confirmed" &&
           props.role === "parent" && (
-            <Button title="Done" onPress={() => props.markInvitationDone()} />
+            <Button title="Done" onPress={() => props.markInvitationDone(invitationData)} />
           )
         )}
       </View>
